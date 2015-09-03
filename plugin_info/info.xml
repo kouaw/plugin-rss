@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info>
+    <id>rss</id>
+    <name>Rss</name>
+    <description>Voir les flux RSS d'un site web ou de plusieurs site via votre dashboard</description>
+    <icon>fa fa-keyboard-o</icon>
+    <licence>AGPL</licence>
+    <author>Alexandre Orilia</author>
+    <installation>Aucune</installation>
+    <require>1.203</require>
+    <category>communication</category>
+    <version>0.1 Alpha</version>
+</info>
+
