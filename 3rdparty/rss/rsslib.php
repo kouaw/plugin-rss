@@ -116,7 +116,7 @@ function RSS_Links($url,$size = 15,$id_plugin)
 
 	RSS_RetrieveLinks($url);
 	if($size > 0)
-		$recents = array_slice($RSS_Content, 0, $size + 1);
+		$recents = array_slice($RSS_Content, 0, $size);
 
 	foreach($recents as $article)
 	{

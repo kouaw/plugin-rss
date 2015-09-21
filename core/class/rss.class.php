@@ -66,6 +66,66 @@ class rss extends eqLogic {
     }
 
     public function postSave() {
+    	
+    	$Jeedom_Blog = $this->getCmd(null, 'Jeedom_Blog');
+		if (!is_object($Jeedom_Blog)) {
+			$Jeedom_Blog = new rssCmd();
+			$Jeedom_Blog->setLogicalId('Jeedom_Blog');
+			$Jeedom_Blog->setIsVisible(1);
+			$Jeedom_Blog->setOrder(1);
+			$Jeedom_Blog->setName(__('Jeedom Blog', __FILE__));
+		}
+        $Jeedom_Blog->setType('info');
+		$Jeedom_Blog->setSubType('string');
+		$Jeedom_Blog->setConfiguration("lien_rss","http://blog.jeedom.fr/?feed=rss2");
+		$Jeedom_Blog->setConfiguration("nbr_article","2");
+		$Jeedom_Blog->setEqLogic_id($this->getId());
+		$Jeedom_Blog->save();
+		
+		$Jeedom_Market = $this->getCmd(null, 'Jeedom_Market_Plugin');
+		if (!is_object($Jeedom_Market)) {
+			$Jeedom_Market = new rssCmd();
+			$Jeedom_Market->setLogicalId('Jeedom_Market_Plugin');
+			$Jeedom_Market->setIsVisible(1);
+			$Jeedom_Market->setOrder(2);
+			$Jeedom_Market->setName(__('Jeedom Market (Plugin)', __FILE__));
+		}
+        $Jeedom_Market->setType('info');
+		$Jeedom_Market->setSubType('string');
+		$Jeedom_Market->setConfiguration("lien_rss","http://market.jeedom.fr/plugin.xml");
+		$Jeedom_Market->setConfiguration("nbr_article","2");
+		$Jeedom_Market->setEqLogic_id($this->getId());
+		$Jeedom_Market->save();
+		
+		$Jeedom_Market_2 = $this->getCmd(null, 'Jeedom_Market_Widget');
+		if (!is_object($Jeedom_Market_2)) {
+			$Jeedom_Market_2 = new rssCmd();
+			$Jeedom_Market_2->setLogicalId('Jeedom_Market_Widget');
+			$Jeedom_Market_2->setIsVisible(0);
+			$Jeedom_Market_2->setOrder(3);
+			$Jeedom_Market_2->setName(__('Jeedom Market (Widget)', __FILE__));
+		}
+        $Jeedom_Market_2->setType('info');
+		$Jeedom_Market_2->setSubType('string');
+		$Jeedom_Market_2->setConfiguration("lien_rss","http://market.jeedom.fr/widget.xml");
+		$Jeedom_Market_2->setConfiguration("nbr_article","2");
+		$Jeedom_Market_2->setEqLogic_id($this->getId());
+		$Jeedom_Market_2->save();
+		
+		$Jeedom_Market_3 = $this->getCmd(null, 'Jeedom_Market_Script');
+		if (!is_object($Jeedom_Market_3)) {
+			$Jeedom_Market_3 = new rssCmd();
+			$Jeedom_Market_3->setLogicalId('Jeedom_Market_Script');
+			$Jeedom_Market_3->setIsVisible(0);
+			$Jeedom_Market_3->setOrder(4);
+			$Jeedom_Market_3->setName(__('Jeedom Market (Script)', __FILE__));
+		}
+        $Jeedom_Market_3->setType('info');
+		$Jeedom_Market_3->setSubType('string');
+		$Jeedom_Market_3->setConfiguration("lien_rss","http://market.jeedom.fr/script.xml");
+		$Jeedom_Market_3->setConfiguration("nbr_article","2");
+		$Jeedom_Market_3->setEqLogic_id($this->getId());
+		$Jeedom_Market_3->save();
         
     }
 
@@ -91,17 +151,19 @@ class rss extends eqLogic {
 		$parametre = utils::o2a(cmd::byEqLogicId($this->getId()));
 		
 		foreach ($parametre as $key => $value){
+			if($value['isVisible'] == 1){
 			$li .= '<a href="#" class="list-group-item disabled">'.$value['name'].'</a>';
 			$nbr = $value['configuration']['nbr_article'];
 			$lien_rss = $value['configuration']['lien_rss'];
 			$li .= RSS_Links($lien_rss,$nbr,$this->getId());
+			}
 		}
 		log::add('rss','debug','params:'.$li);
 		$_version = jeedom::versionAlias($_version);
 
 		$replace = array(
 			'#id#' => $this->getId(),
-			'#name#' => ($this->getIsEnable()) ? $this->getName() : '<del>' . $this->getName() . '</del>',
+			'#name#' => ($this->getIsVisible()) ? $this->getName() : '<del>' . $this->getName() . '</del>',
 			'#eqLink#' => $this->getLinkToConfiguration(),
 			'#li#' => $li
 			);
