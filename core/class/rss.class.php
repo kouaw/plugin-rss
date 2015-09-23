@@ -134,7 +134,6 @@ class rss extends eqLogic {
     }
 
     public function postUpdate() {
-        
     }
 
     public function preRemove() {
@@ -142,23 +141,112 @@ class rss extends eqLogic {
     }
 
     public function postRemove() {
-        
+    }
+
+	public static function cron15() {
+		log::add('rss','debug','/**************************************************/');
+		log::add('rss','debug','/*                                                */');
+		log::add('rss','debug','/*    Lancement de la recherche de flux RSS       */');
+		log::add('rss','debug','/*                                                */');
+		log::add('rss','debug','/**************************************************/');
+		//$lien_dossier = dirname(__FILE__) . '/../../flux_rss';
+		$lien_dossier = realpath(dirname(__FILE__) . '/../../flux_rss');
+		log::add('rss','debug','Lien du dossier RSS :'.$lien_dossier);
+		log::add('rss','debug','////////////////////////////////////////////////////');
+		foreach (rss::byType('rss') as $rss_plugin) {
+			log::add('rss','debug','params :'. $rss_plugin->getId() );
+			$parametre = $rss_plugin->getId();
+			log::add('rss','debug','----------------------------------------------------');
+			foreach (cmd::byEqLogicId($parametre) as $cmd_rss_plugin){
+				$lien_recuperation = $lien_dossier.'/'.$cmd_rss_plugin->getLogicalId().'.json';
+				log::add('rss','debug','On verifi que le fichier existe :'.$lien_recuperation);
+				
+				if(file_exists($lien_recuperation)){
+					log::add('rss','debug','Il existe je récupére le dernier titre');
+					$file_rss = fopen($lien_recuperation, "r");
+					$file_rss_read = fread($file_rss, filesize($lien_recuperation));
+					fclose($file_rss);
+					$file_rss = null;
+					$recuperateur = json_decode($file_rss_read, true);
+					log::add('rss','debug','fichier > '.$file_rss_read);
+					$derniere_description = $recuperateur['contenu'][1]['title'];
+					log::add('rss','debug','Dernier titre du fichier > '.$derniere_description);
+					$file_existe = 1;
+				}else{
+					log::add('rss','debug','pas de fichier');
+					$derniere_description = null;
+					$file_existe = 0;
+				}
+				
+				if($cmd_rss_plugin->getIsVisible() == 1){
+					$configuration_rss = $cmd_rss_plugin->getConfiguration();
+					$lien_rss = $configuration_rss['lien_rss'];
+					$nbr = $configuration_rss['nbr_article'];
+					$name_rss = $cmd_rss_plugin->getName();
+					log::add('rss','debug','Lien :'.$lien_rss.' ,Nombre :'.$nbr.' ,Nom :'.$name_rss);
+				
+					$array_rss_avant = RSS_Links($lien_rss,$nbr);
+					log::add('rss','debug','Retour RSS :'. json_encode($array_rss_avant));
+					log::add('rss','debug','Retour premier titre RSS :'. $array_rss_avant[0][1]['title']);
+					
+					if($array_rss_avant[0][1]['title'] != $derniere_description){
+						log::add('rss','debug','Nous avons une nouveauté :'. $array_rss_avant[0][1]['title']);
+						$array_rss = array('name_rss' => $name_rss, 'contenu' => $array_rss_avant);
+						$json_array = json_encode($array_rss);
+						//file_put_contents($lien_recuperation,'test');
+						if($file_existe == 1){
+							unlink($lien_recuperation);
+						}
+						$file_rss = fopen($lien_recuperation, w);
+						fwrite($file_rss, $json_array);
+						fclose($file_rss);	
+						log::add('rss','debug','Nouveau Fichier enregistré');
+					}
+				}else{
+					if($file_existe == 1){
+						unlink($lien_recuperation);
+					}
+					log::add('rss','debug','N est pas selectionne');
+				}
+				log::add('rss','debug','----------------------------------------------------');
+			}
+			log::add('rss','debug','////////////////////////////////////////////////////');
+		}
+
+
     }
 
 	public function toHtml($_version = 'dashboard') 
 	{
+		$lien_dossier = realpath(dirname(__FILE__) . '/../../flux_rss');
 		$li = null;
-		$parametre = utils::o2a(cmd::byEqLogicId($this->getId()));
-		
-		foreach ($parametre as $key => $value){
-			if($value['isVisible'] == 1){
-			$li .= '<a href="#" class="list-group-item disabled">'.$value['name'].'</a>';
-			$nbr = $value['configuration']['nbr_article'];
-			$lien_rss = $value['configuration']['lien_rss'];
-			$li .= RSS_Links($lien_rss,$nbr,$this->getId());
+		$array_dossier = scandir($lien_dossier);
+		foreach ($array_dossier as $key => $value){
+			if($value == '.' || $value == '..'){
+				
+			}else{
+				$lien_file_dash_rss = $lien_dossier.'/'.$value;
+				$file_dash_rss = fopen($lien_file_dash_rss, 'r');
+				$read_file_dash_rss = fread($file_dash_rss, filesize($lien_file_dash_rss));
+				fclose($file_dash_rss);
+				$file_dash_rss = null;
+				$recuperateur = json_decode($read_file_dash_rss, true);
+				$read_file_dash_rss = null;
+				
+				$li .= '<a href="#" class="list-group-item disabled">'.$recuperateur['name_rss'].'</a>';
+				foreach($recuperateur['contenu'] as $recup){
+					if($recup['title'] !== null){
+						$li .= '<a onclick="open_rss'.$this->getId().'(\''.$recup['link'].'\')" class="list-group-item" style="background-color:transparent;cursor:pointer;">'.htmlentities($recup['title']).'</a>';
+					}else{
+						foreach($recup as $recupencore){
+							if($recupencore['title'] !== null){
+								$li .= '<a onclick="open_rss'.$this->getId().'(\''.$recupencore['link'].'\')" class="list-group-item" style="background-color:transparent;cursor:pointer;">'.$recupencore['title'].'</a>';
+							}
+						}
+					}
+				}
 			}
 		}
-		log::add('rss','debug','params:'.$li);
 		$_version = jeedom::versionAlias($_version);
 
 		$replace = array(

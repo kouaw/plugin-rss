@@ -1,25 +1,21 @@
 :icons:
-== Template
+== RSS
 
 === Description
-Plugin servant de base pour les plugins.
-Attention lors de l'utilisation à bien remplacer tous les templates par l'id de votre plugin.
+Plugin servant à avvoir le flux Rss de n'importe-quel flux directement sur votre dashboard.
+Attention lors de la premiere sauvegarde a ne pas mettre de lien pour beneficier des liens RSS Jeedom.
 
 '''
-=== Création plugin partie 1 : l'arborescence
+=== 1 : Configuration du plugin
 include::partie_1.asciidoc[]
 
 '''
-=== Création plugin partie 2 : plugin info
+=== 2 : Configuration des équipements
 include::partie_2.asciidoc[]
 
 '''
-=== Création plugin partie 3 : dossier desktop
+=== 3 : La partie Dashboard
 include::partie_3.asciidoc[]
-
-'''
-=== Création plugin partie 4 : dossier core
-include::partie_4.asciidoc[]
 
 '''
 === FAQ

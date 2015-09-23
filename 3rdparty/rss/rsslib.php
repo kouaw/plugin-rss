@@ -108,23 +108,25 @@ function RSS_RetrieveLinks($url)
 }
 
 
-function RSS_Links($url,$size = 15,$id_plugin)
+function RSS_Links($url,$size = 15)
 {
 	global $RSS_Content;
 
-	$page = "";
+	$page = array();
 
 	RSS_RetrieveLinks($url);
 	if($size > 0)
 		$recents = array_slice($RSS_Content, 0, $size);
-
+		$i = 1; 
 	foreach($recents as $article)
 	{
 		$type = $article["type"];
 		if($type == 0) continue;
 		$title = $article["title"];
 		$link = $article["link"];
-		$page .= '<a onclick="open_rss'.$id_plugin.'(\''.$link.'\')" class="list-group-item" style="background-color:transparent;cursor:pointer;">'.$title.'</a>';			
+		$article_array = array($i => array('title' => $title, 'link' => $link));
+		array_push($page, $article_array);
+		$i++;
 	}
 
 	return $page;
