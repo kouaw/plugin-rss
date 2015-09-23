@@ -22,7 +22,77 @@ include_file('3rdparty','rss/rsslib','php','rss');
 $RSS_Content = array();
 class rss extends eqLogic {
     /*     * *************************Attributs****************************** */
-	
+    
+	public function RSSComplet(){
+		log::add('rss','debug','/**************************************************/');
+		log::add('rss','debug','/*                                                */');
+		log::add('rss','debug','/*    Lancement de la recherche de flux RSS       */');
+		log::add('rss','debug','/*                                                */');
+		log::add('rss','debug','/**************************************************/');
+		//$lien_dossier = dirname(__FILE__) . '/../../flux_rss';
+		$lien_dossier = realpath(dirname(__FILE__) . '/../../flux_rss');
+		log::add('rss','debug','Lien du dossier RSS :'.$lien_dossier);
+		log::add('rss','debug','////////////////////////////////////////////////////');
+		foreach (rss::byType('rss') as $rss_plugin) {
+			log::add('rss','debug','params :'. $rss_plugin->getId() );
+			$parametre = $rss_plugin->getId();
+			log::add('rss','debug','----------------------------------------------------');
+			foreach (cmd::byEqLogicId($parametre) as $cmd_rss_plugin){
+				$lien_recuperation = $lien_dossier.'/'.$cmd_rss_plugin->getLogicalId().'.json';
+				log::add('rss','debug','On verifi que le fichier existe :'.$lien_recuperation);
+				
+				if(file_exists($lien_recuperation)){
+					log::add('rss','debug','Il existe je récupére le dernier titre');
+					$file_rss = fopen($lien_recuperation, "r");
+					$file_rss_read = fread($file_rss, filesize($lien_recuperation));
+					fclose($file_rss);
+					$file_rss = null;
+					$recuperateur = json_decode($file_rss_read, true);
+					log::add('rss','debug','fichier > '.$file_rss_read);
+					$derniere_description = $recuperateur['contenu'][1]['title'];
+					log::add('rss','debug','Dernier titre du fichier > '.$derniere_description);
+					$file_existe = 1;
+				}else{
+					log::add('rss','debug','pas de fichier');
+					$derniere_description = null;
+					$file_existe = 0;
+				}
+				
+				if($cmd_rss_plugin->getIsVisible() == 1){
+					$configuration_rss = $cmd_rss_plugin->getConfiguration();
+					$lien_rss = $configuration_rss['lien_rss'];
+					$nbr = $configuration_rss['nbr_article'];
+					$name_rss = $cmd_rss_plugin->getName();
+					log::add('rss','debug','Lien :'.$lien_rss.' ,Nombre :'.$nbr.' ,Nom :'.$name_rss);
+				
+					$array_rss_avant = RSS_Links($lien_rss,$nbr);
+					log::add('rss','debug','Retour RSS :'. json_encode($array_rss_avant));
+					log::add('rss','debug','Retour premier titre RSS :'. $array_rss_avant[0][1]['title']);
+					
+					if($array_rss_avant[0][1]['title'] != $derniere_description){
+						log::add('rss','debug','Nous avons une nouveauté :'. $array_rss_avant[0][1]['title']);
+						$array_rss = array('name_rss' => $name_rss, 'contenu' => $array_rss_avant);
+						$json_array = json_encode($array_rss);
+						//file_put_contents($lien_recuperation,'test');
+						if($file_existe == 1){
+							unlink($lien_recuperation);
+						}
+						$file_rss = fopen($lien_recuperation, w);
+						fwrite($file_rss, $json_array);
+						fclose($file_rss);	
+						log::add('rss','debug','Nouveau Fichier enregistré');
+					}
+				}else{
+					if($file_existe == 1){
+						unlink($lien_recuperation);
+					}
+					log::add('rss','debug','N est pas selectionne');
+				}
+				log::add('rss','debug','----------------------------------------------------');
+			}
+			log::add('rss','debug','////////////////////////////////////////////////////');
+		}
+	}
 
 
     /*     * ***********************Methode static*************************** */
@@ -127,6 +197,7 @@ class rss extends eqLogic {
 		$Jeedom_Market_3->setEqLogic_id($this->getId());
 		$Jeedom_Market_3->save();
         
+        rss::RSSComplet();
     }
 
     public function preUpdate() {

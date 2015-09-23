@@ -13,3 +13,7 @@ image:../images/rss_plugin.jpg[width=400,align="center"]
 * Lien RSS : mettre un lien RSS (valide).
 * Nombre d'article : sera le nombre d'article qui serons visible sur votre dashboard.
 * Action : permet d'activer ou desactiver le flux ou meme de supprimer la ligne.
+
+... A Savoir :
+
+La mise à jours est faite toute les 15 Minutes, il est possible qu'apres votre sauvegarde sur cette page, vous n'ayez pas le dashboard qui s'actualise, Problème en cours de résolution.
