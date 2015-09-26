@@ -10,7 +10,7 @@ $eqLogics = eqLogic::byType('rss');
     <div class="col-lg-2 col-md-3 col-sm-4">
         <div class="bs-sidebar">
             <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
-                <a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un template}}</a>
+                <a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un flux RSS}}</a>
                 <li class="filter" style="margin-bottom: 5px;"><input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/></li>
                 <?php
 foreach ($eqLogics as $eqLogic) {
@@ -22,7 +22,7 @@ foreach ($eqLogics as $eqLogic) {
     </div>
 
         <div class="col-lg-10 col-md-9 col-sm-8 eqLogicThumbnailDisplay" style="border-left: solid 1px #EEE; padding-left: 25px;">
-        <legend>{{Mes templates}}
+        <legend>{{Mes flux RSS}}
         </legend>
 
             <div class="eqLogicThumbnailContainer">
@@ -50,7 +50,7 @@ foreach ($eqLogics as $eqLogic) {
             <fieldset>
                 <legend><i class="fa fa-arrow-circle-left eqLogicAction cursor" data-action="returnToThumbnailDisplay"></i> {{Général}}  <i class='fa fa-cogs eqLogicAction pull-right cursor expertModeVisible' data-action='configure'></i></legend>
                 <div class="form-group">
-                    <label class="col-sm-3 control-label">{{Nom de l'équipement template}}</label>
+                    <label class="col-sm-3 control-label">{{Nom du Flux RSS}}</label>
                     <div class="col-sm-3">
                         <input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
                         <input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement template}}"/>
@@ -74,11 +74,19 @@ foreach (object::all() as $object) {
                       <input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Activer}}" data-l1key="isEnable" checked/>
                       <input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Visible}}" data-l1key="isVisible" checked/>
                   </div>
+                <br /><br />
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-8">
+                <input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Mode Barre d'info}}" data-l1key="configuration" data-l2key="theme" checked/>
+                </div>
             </fieldset>
         </form>
 
         <legend>{{RSS}}</legend>
-        <a class="btn btn-success btn-sm cmdAction" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un flux RSS}}</a><br/><br/>
+        <a class="btn btn-success btn-sm cmdAction" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un flux RSS}}</a>
+        <br/>
+        <center><input type="checkbox" class="eqLogicAttr bootstrapSwitch" data-label-text="{{Flux Jeedom}}" data-l1key="configuration" data-l2key="fluxjeedom" checked/> {{(Enregistrer pour voir les modifications)}}</center>
+        <br/>
         <table id="table_cmd" class="table table-bordered table-condensed">
             <thead>
                 <tr>
@@ -88,7 +96,6 @@ foreach (object::all() as $object) {
             <tbody>
             </tbody>
         </table>
-
         <form class="form-horizontal">
             <fieldset>
                 <div class="form-actions">
