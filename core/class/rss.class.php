@@ -122,7 +122,7 @@ class rss extends eqLogic {
 		}
         $Jeedom_Blog->setType('info');
 		$Jeedom_Blog->setSubType('string');
-		$Jeedom_Blog->setConfiguration("lien_rss","http://blog.jeedom.fr/?feed=rss2");
+		$Jeedom_Blog->setConfiguration("lien_rss","https://blog.jeedom.com/?feed=rss2");
 		$Jeedom_Blog->setConfiguration("nbr_article","2");
 		$Jeedom_Blog->setEqLogic_id($this->getId());
 		$Jeedom_Blog->save();
@@ -137,7 +137,7 @@ class rss extends eqLogic {
 		}
         $Jeedom_Market->setType('info');
 		$Jeedom_Market->setSubType('string');
-		$Jeedom_Market->setConfiguration("lien_rss","http://market.jeedom.fr/plugin.xml");
+		$Jeedom_Market->setConfiguration("lien_rss","https://market.jeedom.com/plugin.xml");
 		$Jeedom_Market->setConfiguration("nbr_article","2");
 		$Jeedom_Market->setEqLogic_id($this->getId());
 		$Jeedom_Market->save();
@@ -152,7 +152,7 @@ class rss extends eqLogic {
 		}
         $Jeedom_Market_2->setType('info');
 		$Jeedom_Market_2->setSubType('string');
-		$Jeedom_Market_2->setConfiguration("lien_rss","http://market.jeedom.fr/widget.xml");
+		$Jeedom_Market_2->setConfiguration("lien_rss","https://market.jeedom.com/widget.xml");
 		$Jeedom_Market_2->setConfiguration("nbr_article","2");
 		$Jeedom_Market_2->setEqLogic_id($this->getId());
 		$Jeedom_Market_2->save();
@@ -167,7 +167,7 @@ class rss extends eqLogic {
 		}
         $Jeedom_Market_3->setType('info');
 		$Jeedom_Market_3->setSubType('string');
-		$Jeedom_Market_3->setConfiguration("lien_rss","http://market.jeedom.fr/script.xml");
+		$Jeedom_Market_3->setConfiguration("lien_rss","https://market.jeedom.com/script.xml");
 		$Jeedom_Market_3->setConfiguration("nbr_article","2");
 		$Jeedom_Market_3->setEqLogic_id($this->getId());
 		$Jeedom_Market_3->save();
