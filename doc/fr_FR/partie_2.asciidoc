@@ -4,7 +4,7 @@ image:../images/menu_rss_plugin.jpg[width=353,align="center"]
 
 Puis
 
-image:../images/rss_plugin.jpg[width=400,align="center"]
+image:../images/rss_plugin.jpg[width=600,align="center"]
 
 ... Vous pouvez :
 
